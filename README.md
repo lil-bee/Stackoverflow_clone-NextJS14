@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# DevFlow
+
+A full-stack developer Q&A platform inspired by Stack Overflow — built to explore modern Next.js architecture patterns including Server Actions, SSR/CSR hybrid rendering, and AI-powered features.
+
+🔗 **[Live Demo](https://devflow-lilbee.vercel.app)**
+
+---
+
+## Features
+
+- **Q&A System** — Ask questions, post answers, and engage with the community through upvoting and downvoting
+- **AI-Powered Answers** — Generate instant answers using Google Gemini API
+- **Gamification** — Reputation system and badges that reward meaningful contributions
+- **Advanced Filtering** — Filter questions by tags, recency, frequency, and more
+- **Global Search** — Search across questions, answers, users, and tags simultaneously
+- **Authentication** — Secure sign-in with Clerk (GitHub, Google, email)
+- **Dark / Light Mode** — Persistent theme switching
+- **Responsive UI** — Fully responsive across all screen sizes
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 14 (App Router) |
+| Language | TypeScript |
+| Database | MongoDB + Mongoose |
+| Auth | Clerk |
+| AI | Google Gemini API |
+| UI | Shadcn UI + TailwindCSS |
+| Deployment | Vercel |
+
+---
+
+## Architecture Decisions
+
+**Why Server Actions over API Routes?**
+Server Actions allow direct database mutations from the client without needing to set up separate API endpoints — reducing boilerplate and keeping data flow colocated with the components that need it. This works well for a CRUD-heavy app like a Q&A platform.
+
+**Why MongoDB?**
+The data model for a Q&A platform is document-oriented by nature — questions embed tags, answers, and vote counts. MongoDB's flexible schema made iteration faster during development without the overhead of migrations.
+
+**Why Clerk?**
+Handling auth from scratch with NextAuth adds complexity around session management and OAuth providers. Clerk handles this with minimal setup, letting me focus on core product features instead.
+
+**SSR vs CSR tradeoffs**
+Pages that benefit from SEO (question listings, individual question pages) use SSR. Interactive components like the vote buttons and comment inputs are client components to maintain responsiveness.
+
+---
+
+## Project Structure
+
+```
+├── app/                  # Next.js App Router pages and layouts
+├── components/
+│   ├── shared/           # Reusable layout components (Navbar, Sidebar)
+│   └── ui/               # Shadcn UI primitives
+├── lib/
+│   └── actions/          # Server Actions for all data mutations
+├── database/
+│   └── models/           # Mongoose schemas (Question, User, Answer, Tag)
+├── types/                # Global TypeScript types
+└── constants/            # App-wide constants and config
+```
+
+---
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+# Clone the repo
+git clone https://github.com/lil-bee/Stackoverflow_Clone-NextJS14.git
+cd Stackoverflow_Clone-NextJS14
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env.local
+# Fill in: MONGODB_URI, CLERK_SECRET_KEY, NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY, GEMINI_API_KEY
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## What I Learned
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Structuring Server Actions for a complex, multi-model application
+- Managing SSR/CSR boundaries in Next.js App Router without over-fetching
+- Integrating third-party auth (Clerk) with custom user data in MongoDB
+- Building a global search that queries across multiple collections efficiently
